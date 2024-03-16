@@ -16,11 +16,7 @@ def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
     # Combina los DataFrames para obtener el resultado final
     top_10_users = top_10_users[['date', 'username']]
 
-
-    top_10_users_list= list(top_10_users.itertuples(index=False, name=None))
-    print(top_10_users_list)
-
-
+    return list(top_10_users.itertuples(index=False, name=None))
 
 if __name__ == "__main__":
     q1_memory(r'C:\Users\wppaez\Desktop\challenge_LATAM\input\farmers-protest-tweets-2021-2-4.json')
