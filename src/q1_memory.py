@@ -19,5 +19,7 @@ def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
     return list(top_10_users.itertuples(index=False, name=None))
 
 if __name__ == "__main__":
-    q1_memory(r'C:\Users\wppaez\Desktop\challenge_LATAM\input\farmers-protest-tweets-2021-2-4.json')
+    result = q1_memory('./input/farmers-protest-tweets-2021-2-4.json')
+    print(result)
+    
 
