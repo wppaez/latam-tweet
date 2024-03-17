@@ -2,24 +2,28 @@ from typing import List, Tuple
 from datetime import datetime
 from utils import load_json_as_df
 import pandas as pd
+
 def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
+    # Cargar el DataFrame directamente en lugar de cargarlo y luego agruparlo
     df = load_json_as_df(file_path, include_date=True)
 
-    tweets_by_date = df.groupby(df['date']).size().reset_index(name='count')
+    # Obtener las fechas con más tweets directamente sin agrupar todo el DataFrame
+    top_dates = df['date'].value_counts().head(10).index
 
-    # Ordena en orden descendente por la cantidad de tweets
-    top_10 = tweets_by_date.sort_values(by='count', ascending=False).head(10)
+    # Filtrar el DataFrame solo para las fechas con más tweets
+    top_df = df[df['date'].isin(top_dates)]
 
-    # Obtén los usuarios con más publicaciones para cada una de las fechas top
-    top_10_users= df[df['date'].isin(top_10['date'])].groupby('date')['username'].agg(lambda x: x.value_counts().index[0]).reset_index()
+    # Obtener los usuarios con más publicaciones para cada fecha top
+    top_users = top_df.groupby('date')['username'].agg(lambda x: x.value_counts().idxmax()).reset_index()
 
-    # Combina los DataFrames para obtener el resultado final
-    top_10_users = top_10_users[['date', 'username']]
+    # Convertir las fechas a objetos datetime.date
+    top_users['date'] = pd.to_datetime(top_users['date']).dt.date
 
-    return list(top_10_users.itertuples(index=False, name=None))
+    # Obtener el resultado final como una lista de tuplas
+    result = list(top_users.itertuples(index=False, name=None))
+
+    return result
 
 if __name__ == "__main__":
     result = q1_memory('./input/farmers-protest-tweets-2021-2-4.json')
     print(result)
-    
-
