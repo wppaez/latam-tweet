@@ -42,9 +42,11 @@ def load_json_as_df(
                 payload = payload + (tweet["content"],)
 
             if include_mentions:
-                mention_list = [
+                mention_list = []
+                if not tweet["mentionedUsers"] is None:
+                    mention_list=[
                     mention["username"] for mention in tweet["mentionedUsers"]
-                ]
+                    ]
                 mentions = ", ".join(mention_list)
                 payload = payload + (mentions,)
 
