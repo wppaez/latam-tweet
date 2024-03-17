@@ -8,11 +8,19 @@ def extract_emojis(text: str) -> List[str]:
 
 def q2_time(file_path: str) -> List[Tuple[str, int]]:
     df = load_json_as_df(file_path, include_content=True)
+    
+    # Crear un conjunto de emojis únicos
+    unique_emojis = set(emoji.EMOJI_DATA.keys())
+    
+    # Contar emojis únicos en cada texto
     emojis_count = {}
     for text in df['content']:
-        emojis = extract_emojis(text)
-        for emoji in emojis:
-            emojis_count[emoji] = emojis_count.get(emoji, 0) + 1
+        extracted_emojis = set(extract_emojis(text))  # Convertir a conjunto para emojis únicos
+        emojis_in_text = extracted_emojis.intersection(unique_emojis)  # Filtrar emojis válidos
+        for current_emoji in emojis_in_text:
+            emojis_count[current_emoji] = emojis_count.get(current_emoji, 0) + 1
+    
+    # Obtener los 10 emojis más frecuentes
     top_emojis = sorted(emojis_count.items(), key=lambda x: x[1], reverse=True)[:10]
     return top_emojis
 
